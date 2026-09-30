@@ -4,6 +4,14 @@
 #SBATCH --ntasks-per-node=2
 #SBATCH --time=00:10:00
 
-module load python || true
+set -euo pipefail
 
-srun python3 scripts/benchmarks/mpi_pi.sh
+module load gcc || true
+module load openmpi || true
+
+mkdir -p build
+mpicc -O2 scripts/benchmarks/mpi_pi.c -lm -o build/mpi_pi
+
+STEPS="${STEPS:-10000000}"
+echo "Running MPI Pi benchmark with ${SLURM_NTASKS:-4} ranks and ${STEPS} integration steps"
+srun build/mpi_pi "$STEPS"
