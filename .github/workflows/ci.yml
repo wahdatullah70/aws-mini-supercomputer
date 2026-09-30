@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile Python examples
+        run: python -m compileall scripts
+      - name: Validate shell syntax
+        shell: bash
+        run: |
+          find scripts -type f -name '*.sh' -print0 | while IFS= read -r -d '' f; do
+            bash -n "$f"
+          done
+      - name: Validate YAML syntax
+        run: |
+          python - <<'PY'
+          import pathlib
+          try:
+              import yaml
+          except ImportError:
+              raise SystemExit('PyYAML is required')
+          for path in pathlib.Path('.').rglob('*.yaml'):
+              yaml.safe_load(path.read_text())
+              print(f'validated {path}')
+          PY
+        env:
+          PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      - name: Install YAML parser
+        run: pip install pyyaml
