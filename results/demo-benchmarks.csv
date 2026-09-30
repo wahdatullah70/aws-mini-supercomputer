@@ -1,0 +1,5 @@
+status,workload,nodes,tasks_or_processes,problem_size,runtime_seconds,speedup,efficiency,notes
+SYNTHETIC_TEMPLATE,MPI Pi,1,2,10000000,,,,Replace with real measurement
+SYNTHETIC_TEMPLATE,MPI Pi,2,4,10000000,,,,Replace with real measurement
+SYNTHETIC_TEMPLATE,PyTorch DDP,1,1,Linear(1024x1024),,,,Requires GPU environment
+SYNTHETIC_TEMPLATE,PyTorch DDP,2,2,Linear(1024x1024),,,,Requires GPU environment
