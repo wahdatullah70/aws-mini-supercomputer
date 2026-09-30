@@ -31,7 +31,7 @@ flowchart LR
 - **Head node** — login, job submission, scheduler control
 - **Compute nodes** — autoscaled workload execution
 - **Shared storage** — common data/workspace path
-- **MPI** — distributed parallel-compute example
+- **MPI** — real multi-process Pi integration benchmark in C with `MPI_Reduce`
 - **PyTorch DDP** — distributed machine-learning example
 
 ## End-to-end workflow
@@ -70,6 +70,16 @@ Troubleshoot / compare results
 Delete cloud resources
 ```
 
+## Demo evidence
+
+Because the original AWS runtime evidence is not preserved in this public repository, the project includes a clearly labeled **synthetic evidence pack** showing the expected operational workflow without pretending the numbers were measured on a live cluster:
+
+- [Synthetic Slurm/AWS terminal session](results/demo-terminal-session.md)
+- [Benchmark-results template](results/demo-benchmarks.csv)
+- [Evidence collection guide](results/README.md)
+
+> Anything marked `SYNTHETIC`, `DEMO`, or `<MEASURED_AT_RUNTIME>` is illustrative only. Real timing, throughput, speedup, and efficiency values must come from an actual cluster run.
+
 ## CI validation
 
 GitHub Actions automatically checks:
@@ -102,9 +112,12 @@ aws-mini-supercomputer/
 │   └── pcluster/
 │       └── cluster-config.example.yaml
 ├── results/
-│   └── README.md
+│   ├── README.md
+│   ├── demo-terminal-session.md
+│   └── demo-benchmarks.csv
 └── scripts/
     └── benchmarks/
+        ├── mpi_pi.c
         ├── mpi_pi.sh
         ├── run_mpi.sh
         ├── pytorch_ddp.py
@@ -135,7 +148,13 @@ scontrol show partition
 
 ### 4. Run parallel workloads
 
-MPI:
+Local MPI smoke test:
+
+```bash
+NP=4 STEPS=10000000 bash scripts/benchmarks/mpi_pi.sh
+```
+
+Slurm MPI run:
 
 ```bash
 sbatch scripts/benchmarks/run_mpi.sh
@@ -150,8 +169,6 @@ sbatch scripts/benchmarks/run_ddp.sh
 ### 5. Measure and document
 
 Use [docs/benchmarking.md](docs/benchmarking.md) and [results/README.md](results/README.md) to capture environment, timing, throughput, speedup, efficiency, logs, and limitations.
-
-> No measured performance values are committed unless they come from an actual documented run.
 
 ### 6. Tear down
 
@@ -181,6 +198,7 @@ Always verify that no unnecessary supporting resources remain in the AWS account
 
 - HPC architecture and scheduler concepts
 - Slurm job submission and troubleshooting
+- real MPI parallelism using `MPI_Reduce`
 - Linux cluster operations
 - MPI and distributed ML workflows
 - AWS infrastructure provisioning
