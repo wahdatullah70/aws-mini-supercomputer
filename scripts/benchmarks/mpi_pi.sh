@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Simple MPI Pi benchmark using mpirun
-# Replace with a real MPI binary if desired
+# Local convenience wrapper for the real MPI implementation in mpi_pi.c.
+# For Slurm/AWS execution use run_mpi.sh instead.
 
-python3 - <<'PY'
-import time
+NP="${NP:-4}"
+STEPS="${STEPS:-10000000}"
 
-start = time.time()
-pi = sum(4.0 * ((-1)**k) / (2*k+1) for k in range(1_000_000))
-print(f"Estimated Pi: {pi}")
-print(f"Runtime: {time.time()-start:.2f}s")
-PY
+command -v mpicc >/dev/null 2>&1 || { echo "mpicc is required" >&2; exit 1; }
+command -v mpirun >/dev/null 2>&1 || { echo "mpirun is required" >&2; exit 1; }
+
+mkdir -p build
+mpicc -O2 scripts/benchmarks/mpi_pi.c -lm -o build/mpi_pi
+
+echo "Running local MPI Pi benchmark with ${NP} ranks and ${STEPS} integration steps"
+mpirun -np "$NP" build/mpi_pi "$STEPS"
