@@ -1,5 +1,8 @@
 # AWS Mini Supercomputer
 
+[![CI](https://github.com/wahdatullah70/aws-mini-supercomputer/actions/workflows/ci.yml/badge.svg)](https://github.com/wahdatullah70/aws-mini-supercomputer/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A reproducible **Slurm-based HPC lab on AWS** for learning and demonstrating distributed computing, MPI, PyTorch Distributed Data Parallel, scheduling, benchmarking, troubleshooting, security, and cloud cost awareness.
 
 > This repository is designed as a portfolio-grade infrastructure project: the focus is not only on creating resources, but on documenting how the system is built, operated, validated, measured, secured, and torn down.
@@ -67,11 +70,25 @@ Troubleshoot / compare results
 Delete cloud resources
 ```
 
+## CI validation
+
+GitHub Actions automatically checks:
+
+- Python syntax for benchmark code;
+- shell-script syntax;
+- YAML parsing for infrastructure configuration.
+
+This catches repository-level errors without pretending to provision AWS resources inside CI.
+
 ## Repository structure
 
 ```text
 aws-mini-supercomputer/
+├── .github/workflows/ci.yml
 ├── README.md
+├── LICENSE
+├── SECURITY.md
+├── CONTRIBUTING.md
 ├── docs/
 │   ├── architecture.md
 │   ├── setup-aws.md
@@ -84,6 +101,8 @@ aws-mini-supercomputer/
 ├── infra/
 │   └── pcluster/
 │       └── cluster-config.example.yaml
+├── results/
+│   └── README.md
 └── scripts/
     └── benchmarks/
         ├── mpi_pi.sh
@@ -130,7 +149,9 @@ sbatch scripts/benchmarks/run_ddp.sh
 
 ### 5. Measure and document
 
-Use [docs/benchmarking.md](docs/benchmarking.md) to capture environment, timing, throughput, speedup, efficiency, logs, and limitations.
+Use [docs/benchmarking.md](docs/benchmarking.md) and [results/README.md](results/README.md) to capture environment, timing, throughput, speedup, efficiency, logs, and limitations.
+
+> No measured performance values are committed unless they come from an actual documented run.
 
 ### 6. Tear down
 
@@ -152,6 +173,9 @@ Always verify that no unnecessary supporting resources remain in the AWS account
 | Security | [docs/security.md](docs/security.md) |
 | Troubleshooting | [docs/troubleshooting.md](docs/troubleshooting.md) |
 | Cost control | [docs/cost-control.md](docs/cost-control.md) |
+| Results/evidence format | [results/README.md](results/README.md) |
+| Contribution workflow | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| Security policy | [SECURITY.md](SECURITY.md) |
 
 ## What this project demonstrates
 
@@ -160,6 +184,7 @@ Always verify that no unnecessary supporting resources remain in the AWS account
 - Linux cluster operations
 - MPI and distributed ML workflows
 - AWS infrastructure provisioning
+- CI-based repository validation
 - performance measurement and evidence collection
 - security boundaries and credential hygiene
 - cost-aware cloud operations
