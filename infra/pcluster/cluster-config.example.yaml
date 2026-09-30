@@ -1,0 +1,28 @@
+Region: us-east-1
+Image:
+  Os: alinux2023
+HeadNode:
+  InstanceType: t3.small
+  Networking:
+    SubnetId: subnet-xxxxxxxx
+  Ssh:
+    KeyName: YOUR_KEY_NAME
+Scheduling:
+  Scheduler: slurm
+  SlurmQueues:
+    - Name: compute
+      Networking:
+        SubnetIds:
+          - subnet-xxxxxxxx
+      ComputeResources:
+        - Name: cpu
+          InstanceType: c6i.large
+          MinCount: 0
+          MaxCount: 2
+SharedStorage:
+  - MountDir: /shared
+    Name: shared-ebs
+    StorageType: Ebs
+    EbsSettings:
+      VolumeType: gp3
+      Size: 20
